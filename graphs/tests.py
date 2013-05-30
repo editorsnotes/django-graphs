@@ -67,21 +67,30 @@ def make_get_request(context):
 def sort_dict(d):
     def sort_item(i):
         (k,v) = i
-        if isinstance(v, dict):
-            sort_dict(v)
-        if isinstance(v, list):
-            d[k] = sorted(v)
+        d[k] = sort_value(v)
     map(sort_item, d.items())
+    return d
     
+def sort_value(v):
+    if isinstance(v, dict):
+        return sort_dict(v)
+    if isinstance(v, list):
+        return sorted(v, key=lambda i: canonical_json(i))
+    return v
+
+def canonical_json(o):
+    return json.dumps(
+        sort_value(o), sort_keys=True, indent=2, separators=(',', ': '))
+
 def check_json_ld(context):
     getattr(sys.modules[__name__], 'check_json_ld_depth_{}'.format(
             context['depth'] if 'depth' in context else 0))(context)
 
 def assert_json(context, expect):
     data = json.loads(context['response'].content) 
-    sort_dict(data)
     context['case'].maxDiff = None
-    context['case'].assertEquals(expect,data)
+    context['case'].assertMultiLineEqual(
+        canonical_json(expect), canonical_json(data))
 
 def check_json_ld_depth_0(context):
     assert_json(context, {
@@ -99,10 +108,6 @@ def check_json_ld_depth_2(context):
     assert_json(context, {
             u"@context": context['context'],
             u"@graph": [
-                { u"@id": u"http://www.wikidata.org/wiki/Q37",
-                  u"ISO 3166-1 alpha-3": u"LTU" } ,
-                { u"@id": u"http://www.wikidata.org/wiki/Q4115712",
-                  u"country": {u"@id": u"http://www.wikidata.org/wiki/Q37"} },
                 { u"@id": context['subject'],
                   u"name": [
                         { u"@value": u"Emma Goldman", u"@language": u"en" },
@@ -111,6 +116,10 @@ def check_json_ld_depth_2(context):
                   u"place of birth": {
                         u"@id": u"http://www.wikidata.org/wiki/Q4115712"},
                   u"prefLabel": u"Emma Goldman" },
+                { u"@id": u"http://www.wikidata.org/wiki/Q37",
+                  u"ISO 3166-1 alpha-3": u"LTU" } ,
+                { u"@id": u"http://www.wikidata.org/wiki/Q4115712",
+                  u"country": {u"@id": u"http://www.wikidata.org/wiki/Q37"} },
                 ] })
 
 def setitem(k,v,d): 
