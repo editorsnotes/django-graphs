@@ -1,7 +1,1 @@
-Django==1.5.1
-behave==1.2.2
-rdflib==4.0.1
-rdflib-jsonld==0.1
-rdflib-sqlalchemy==0.2.dev
-requests==1.2.3
-wsgi-intercept==0.5.1
+-e git+https://github.com/editorsnotes/rdflib-sqlalchemy.git#egg=rdflib-sqlalchemy

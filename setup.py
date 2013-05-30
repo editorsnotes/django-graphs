@@ -6,10 +6,13 @@ README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
+# TODO: run tests from setup.py
+
 setup(
     name='django-graphs',
     version='0.1',
     packages=['graphs'],
+    install_requires=['rdflib-sqlalchemy==0.2.dev'],
     include_package_data=True,
     license='Public Domain',
     description='A Django mixin and middleware for linking graphs to objects.',
