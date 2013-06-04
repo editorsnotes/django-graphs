@@ -16,9 +16,15 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'graphs.middleware.SQLAlchemyStore',
     )
+NAMESPACES = {
+    'foaf': 'http://xmlns.com/foaf/0.1/',
+    'skos': 'http://www.w3.org/2004/02/skos/core#',
+    'wiki': 'http://www.wikidata.org/wiki/Property:',
+    }
 JSON_LD_CONTEXT = {
     u"prefLabel": u"http://www.w3.org/2004/02/skos/core#prefLabel",
     u"name": u"http://xmlns.com/foaf/0.1/name",
+    u"type": u"http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
     u"place of birth": u"http://www.wikidata.org/wiki/Property:P19",
     u"country": u"http://www.wikidata.org/wiki/Property:P17",
     u"ISO 3166-1 alpha-3": u"http://www.wikidata.org/wiki/Property:P298" }
